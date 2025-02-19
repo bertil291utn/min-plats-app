@@ -5,6 +5,8 @@ import {
   IonInput,
   IonButton,
   IonInputPasswordToggle,
+  useIonRouter,
+  IonToast,
 } from '@ionic/react';
 
 const LoginC: React.FC = () => {
@@ -12,16 +14,33 @@ const LoginC: React.FC = () => {
     userId: '',
     password: ''
   });
+
+  const router = useIonRouter();
+  const [showToast, setShowToast] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login logic
-    console.log('Login attempt:', credentials.userId);
+    if (credentials.password === '123456') {
+      // Store credentials in localStorage with expiry
+      const expiryDate = new Date();
+      expiryDate.setMonth(expiryDate.getMonth() + 1);
+      const storageData = {
+        userId: credentials.userId,
+        expiry: expiryDate.getTime()
+      };
+      localStorage.setItem('userAuth', JSON.stringify(storageData));
+
+
+      router.push('/home', 'forward', 'push');
+    } else {
+setShowToast(true)
+    }
   };
 
   const handleChange = (e: any) => {
     const { value } = e.detail as { value: string };
     const { name } = e.target as { name: string };
-    
+
     setCredentials(prev => ({
       ...prev,
       [name]: value
@@ -31,7 +50,17 @@ const LoginC: React.FC = () => {
   return (
     <IonPage>
       <IonContent className="ion-padding">
+        
         <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+        <IonToast
+          position="top"
+          positionAnchor="header"
+          message="Contraseña o cedula incorrecta"
+          duration={4000}
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+
+        ></IonToast>
           <form onSubmit={handleSubmit} style={{ width: '100%' }}>
             <IonInput
               labelPlacement='floating'
@@ -53,10 +82,10 @@ const LoginC: React.FC = () => {
               value={credentials.password}
               onIonChange={handleChange}
               required
-              
+
             >
               <IonInputPasswordToggle slot="end"></IonInputPasswordToggle>
-              </IonInput>
+            </IonInput>
 
             <div className="ion-padding-top">
               <IonButton expand="block" type="submit">
