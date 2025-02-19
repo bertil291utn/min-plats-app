@@ -2,14 +2,9 @@ import React, { useState } from 'react';
 import {
   IonContent,
   IonPage,
-  IonItem,
-  IonLabel,
   IonInput,
   IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
+  IonInputPasswordToggle,
 } from '@ionic/react';
 
 const LoginC: React.FC = () => {
@@ -17,7 +12,6 @@ const LoginC: React.FC = () => {
     userId: '',
     password: ''
   });
-  console.log(credentials)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implement login logic
@@ -59,7 +53,10 @@ const LoginC: React.FC = () => {
               value={credentials.password}
               onIonChange={handleChange}
               required
-            />
+              
+            >
+              <IonInputPasswordToggle slot="end"></IonInputPasswordToggle>
+              </IonInput>
 
             <div className="ion-padding-top">
               <IonButton expand="block" type="submit">
